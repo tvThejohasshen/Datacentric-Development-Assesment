@@ -1,32 +1,32 @@
 [
     {
-    "_id": "1",
-    "title": "The book you wish your parents had read",
+    "_id": "1001",
+    "book title": "The book you wish your parents had read",
     "authors": ["1"],
     "email":"philippa@gmail.com",
     "description":"The main message is that is that it's best to acknowledge of children's feelings.",
-    "language":"Englsh",
+    "language":"English",
     "paper back":"272 pages",
     "ISBN-13":"978-0241251027",
     "sellers rank":"1 in child and developmental psychology",
     "publish_date":"2020-12-31",
     "Ratings":"6712",
     "Contact":"+6587889",
-    "collections": ["1"]
+    "collections": ["1001"]
   },
   {
-          "_id": "2",
-          "title": "The psychology of money",
-          "authors": ["2"],
-          "email":"morgan@gmail.com",
-          "descriptions":"Timeless lessons on wealth, greed, and happiness.",
-          "language":"Englsh",
-          "paper back":"272 pages",
-          "ISBN-13":"978-0857197689",
-          "sellers rank":"1 in professional finance",
-          "publish_date": "2020-09-08",
-          "Ratings":"16588",
-          "contact":"+65989098",
-          "collections": ["1"]
+    "_id": "1002",
+    "book title": "The psychology of money",
+    "authors": ["2"],
+    "email":"morgan@gmail.com",
+    "descriptions":"Timeless lessons on wealth, greed, and happiness.",
+    "language":"English",
+    "paper back":"272 pages",
+    "ISBN-13":"978-0857197689",
+    "sellers rank":"1 in professional finance",
+    "publish_date": "2020-09-08",
+    "Ratings":"16588",
+    "contact":"+65989098",
+    "collections": ["1001"]
    }
 ]

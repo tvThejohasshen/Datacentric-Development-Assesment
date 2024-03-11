@@ -74,22 +74,55 @@ async function main() {
         }
 
     });
-
+}
     // Sample Book Collections document"
     // {
-    //   _id: ObjectId(),
+    //   _id: "1001",
     //  description:"Acknowledge of children's feelings.",
-    //  book:[["1", "2"]],
-    //  publish_date:2020-31-12
+    //  book title:[["1", "2"]],
+    //  publish_date:2020-31-12,
+    //  email:"philippa@gmail.com",
+    //  language:"English",
+    //  paper back:"272 pages",
+    //  ISBN-13:"978-0241251027",
+    //  sellers rank":"1 in child and developmental psychology",
+    //  Ratings:"6712",
+    //  Contact":"+6587889",
+    //  
     // }
     app.post("/book-collections", async function (req, res) {
         // try...catch is for exception handling
         // an execption is an unexpected error usually from a third party
         // (in this case, the third party is Mongo Atlas)
+
+        const data = [
+            {
+                "_id":"1001",
+                "description":"The main message is that is that it's best to acknowledge of children's feelings.",
+                "book title":"The book you wish your parents had read",
+                "publish_date":"2020-12-31",
+                "email":"philippa@gmail.com",
+                "language":"English",
+                "paperback":"272 pages",
+                "ISBN":"978-0241251027",
+                "contact":"+6587889"
+            },
+            { 
+                 "_id":"1002",
+                 "book title": "The psychology of money",
+                 "description": "Timeless lessons on wealth, greed, and happiness.",
+                 "publish_date":"2020-09-08",
+                 "email":"morgan@gmail.com",
+                 "language": "English",
+                 "paperback": "272 pages",
+                 "ISBN":"978-0857197689",
+                 "ratings":"1 in professional finance",
+                 "contact":"+65989098",
+    
+            }
+        ]
+
         try {
-            const description = req.body.description;
-            const book = req.body.book;
-            const publish_date = req.body.date ? new Date(req.body.date): new Date();
             
             if (!description) {
                 res.status(400);
@@ -107,11 +140,8 @@ async function main() {
             }
             
             // insert a new document based on what the client has sent
-            const result = await db.collection("collections").insertOne({
-                'description': description,
-                'book': book,
-                'publish_date':publish_date
-            });
+            const result = await db.collection("collections").insertMany(data);
+            
             res.json({
                 'result': result
             })
@@ -125,44 +155,52 @@ async function main() {
 
     })
 
-    app.put('/book-collections/:id', async function(req,res){
+    app.put('/book-collections/:webpage', async function(req,res) {
+
+        const data = {
+            "description":"The main message is that is that it's best to acknowledge of children's feelings.",
+            "book title":"The book you wish your parents had read",
+            "publish_date":"2020-12-31",
+            "email":"philippa@gmail.com",
+            "language":"English",
+            "paperback":"272 pages",
+            "ISBN":"978-0241251027",
+            "contact":"+6587889"
+        }
+
         try {
-            const description = req.body.description;
-            const book = req.body.book;
-            const publish_date = req.body.date ?  new Date(req.body.date) : new Date();
-    
-            if (!description || !book || !Array.isArray(book)) {
-                res.status(400); // bad request -- the client didn't follow the specifications for our endpoint
-                res.json({
-                    'error': 'Invalid data provided'
-                });
+            id = req.params.webpage;
+           
+            if (!data.description || !data["book title"] || !Array.isArray(data["book title"])) {
+                res.status(400).json({ 'error': 'Invalid data provided' });
                 return;
             }
-    
-            const result = await db.collection("collections").updateOne({
-                '_id': new ObjectId(req.params.id)
-            },{
-                '$set': {
-                    'description': description,
-                    'book': book,
-                    'publish_date':publish_date
-                }
-            })
-    
+
+            // The collection name needs to be inside
+            const result = await db.collection("collectionNameToReplaceWithTheRealOne").updateOne(
+                { '_id': id }, // Filter criteria to match documents by ID
+                { '$set': data }
+            );
+        
             res.json({
                 'result': result
             })
+
         } catch (e) {
             res.status(500);
             res.json({
                 'error':'Internal Server Error'
-            })
+            });
         }
-       
     })
+    
+    
+    
+    
+       
 
     app.delete('/book-collections/:id', async function(req,res){
-        await db.collection('collections').deleteOne({
+        await db.collection('collections').deleteMany({
             '_id': new ObjectId(req.params.id)
         });
 
@@ -170,7 +208,7 @@ async function main() {
             'message':"Deleted"
         })
     })
-}
+
 
 main();
 
