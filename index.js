@@ -33,12 +33,12 @@ async function connect(uri, dbname) {
     let db = client.db(dbname);
     return db;
 }
-
+let db; 
 async function main() {
     // connection string is now from the .env file
     const uri = process.env.MONGO_URI;
     // get the database using the `connect` function
-    const db = await connect(uri, "book-collections");
+    db = await connect(uri, "book-collections");
 
     // create the routes after connecting to the database
     app.get("/book-collections", async function (req, res) {
@@ -94,19 +94,20 @@ async function main() {
         // try...catch is for exception handling
         // an execption is an unexpected error usually from a third party
         // (in this case, the third party is Mongo Atlas)
-
-        const data = [
-            {
-                "_id":"1001",
-                "description":"The main message is that is that it's best to acknowledge of children's feelings.",
-                "book title":"The book you wish your parents had read",
-                "publish_date":"2020-12-31",
-                "email":"philippa@gmail.com",
-                "language":"English",
-                "paperback":"272 pages",
-                "ISBN":"978-0241251027",
-                "contact":"+6587889"
-            },
+        
+        const data = 
+        // [
+            // {
+            //     "_id":"1001",
+            //     "description":"The main message is that is that it's best to acknowledge of children's feelings.",
+            //     "book title":"The book you wish your parents had read",
+            //     "publish_date":"2020-12-31",
+            //     "email":"philippa@gmail.com",
+            //     "language":"English",
+            //     "paperback":"272 pages",
+            //     "ISBN":"978-0241251027",
+            //     "contact":"+6587889",
+            // },
             { 
                  "_id":"1002",
                  "book title": "The psychology of money",
@@ -118,44 +119,47 @@ async function main() {
                  "ISBN":"978-0857197689",
                  "ratings":"1 in professional finance",
                  "contact":"+65989098",
-    
             }
-        ]
+        // ]
 
         try {
-            
-            if (!description) {
-                res.status(400);
-                res.json({
-                    'error':'Acknowledge of childrens feelings'
-                });
-                return;
-            }
 
-            if (!book || !Array.isArray(book)) {
-                res.status(400);
-                res.json({
-                    'error':'book must be provided and must be an array'
-                })
-            }
+            // if (!description) {
+            //     res.status(400);
+            //     res.json({
+            //         'error':'Acknowledge of childrens feelings'
+            //     });
+            //     // return;
+            // }
+
+            // if (!book || !Array.isArray(book)) {
+            //     res.status(400);
+            //     res.json({
+            //         'error':'book must be provided and must be an array'
+            //     })
+            // }
             
             // insert a new document based on what the client has sent
-            const result = await db.collection("collections").insertMany(data);
+            console.log("hellowwwwwww")
+            const result = await db.collection("collections").insertOne(data);
+            console.log("results here", result)
             
+            // data is a document - JSON is {blah blah}
+
             res.json({
                 'result': result
             })
         } catch (e) {
             // e will contain the error message
-            res.status(500); // internal server error
+            res.status(500); 
             res.json({
-                'error': e
+                'error': "Hello we are here"
             })
         }
 
     })
 
-    app.put('/book-collections/:webpage', async function(req,res) {
+    app.put('/book-collections/webpage', async function(req,res) {
 
         const data = {
             "description":"The main message is that is that it's best to acknowledge of children's feelings.",
@@ -196,9 +200,6 @@ async function main() {
     
     
     
-    
-       
-
     app.delete('/book-collections/:id', async function(req,res){
         await db.collection('collections').deleteMany({
             '_id': new ObjectId(req.params.id)
