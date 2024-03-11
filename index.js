@@ -45,7 +45,7 @@ async function main() {
             const results = await db.collection("collections").find({}).toArray();
 
             res.json({
-                'scollections': results
+                'collections': results
             })
         } catch (e) {
             res.status(500);
