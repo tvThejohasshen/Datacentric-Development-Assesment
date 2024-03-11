@@ -94,7 +94,7 @@ async function main() {
             if (!description) {
                 res.status(400);
                 res.json({
-                    'error':'A description must be provided'
+                    'error':'Acknowledge of childrens feelings'
                 });
                 return;
             }
