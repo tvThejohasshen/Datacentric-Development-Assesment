@@ -75,89 +75,77 @@ async function main() {
 
     });
 }
-    // Sample Book Collections document"
-    // {
-    //   _id: "1001",
-    //  description:"Acknowledge of children's feelings.",
-    //  book title:[["1", "2"]],
-    //  publish_date:2020-31-12,
-    //  email:"philippa@gmail.com",
-    //  language:"English",
-    //  paper back:"272 pages",
-    //  ISBN-13:"978-0241251027",
-    //  sellers rank":"1 in child and developmental psychology",
-    //  Ratings:"6712",
-    //  Contact":"+6587889",
-    //  
-    // }
-    app.post("/book-collections", async function (req, res) {
+[
+    { 
+     "_id":"1002",
+     "book title": "The psychology of money",
+     "description": "Timeless lessons on wealth, greed, and happiness.",
+     "publish_date":"2020-09-08",
+     "email":"morgan@gmail.com",
+     "language": "English",
+     "paperback": "272 pages",
+     "ISBN":"978-0857197689",
+     "ratings":"1 in professional finance",
+     "contact":"+65989098",
+    }
+]
+    
         // try...catch is for exception handling
         // an execption is an unexpected error usually from a third party
         // (in this case, the third party is Mongo Atlas)
         
-        const data = 
-        // [
-            // {
-            //     "_id":"1001",
-            //     "description":"The main message is that is that it's best to acknowledge of children's feelings.",
-            //     "book title":"The book you wish your parents had read",
-            //     "publish_date":"2020-12-31",
-            //     "email":"philippa@gmail.com",
-            //     "language":"English",
-            //     "paperback":"272 pages",
-            //     "ISBN":"978-0241251027",
-            //     "contact":"+6587889",
-            // },
-            { 
-                 "_id":"1002",
-                 "book title": "The psychology of money",
-                 "description": "Timeless lessons on wealth, greed, and happiness.",
-                 "publish_date":"2020-09-08",
-                 "email":"morgan@gmail.com",
-                 "language": "English",
-                 "paperback": "272 pages",
-                 "ISBN":"978-0857197689",
-                 "ratings":"1 in professional finance",
-                 "contact":"+65989098",
-            }
-        // ]
+            
+     app.post("/book-collections", async function (req, res) {
 
         try {
-
-            // if (!description) {
-            //     res.status(400);
-            //     res.json({
-            //         'error':'Acknowledge of childrens feelings'
-            //     });
-            //     // return;
-            // }
-
-            // if (!book || !Array.isArray(book)) {
-            //     res.status(400);
-            //     res.json({
-            //         'error':'book must be provided and must be an array'
-            //     })
-            // }
+              const bookdata = req.body;
             
             // insert a new document based on what the client has sent
-            console.log("hellowwwwwww")
-            const result = await db.collection("collections").insertOne(data);
-            console.log("results here", result)
+            const result = await db.collection("collections").insertOne(bookdata);
+            
             
             // data is a document - JSON is {blah blah}
-
+        [ 
+            {
+                "_id": "1002",
+                "book title": "The psychology of money",
+                "description": "Timeless lessons on wealth, greed, and happiness.",
+                "publish_date": "2020-09-08",
+                "email": "morgan@gmail.com",
+                "language": "English",
+                "paperback": "272 pages",
+                "ISBN": "978-0857197689",
+                "ratings": "1 in professional finance",
+                "contact": "+65989098"
+            }
+        ]
+ // Check if the bookData is an array (multiple books) or a single object (single book)
+ if (Array.isArray(bookcollectionsData)) {
+    // If it's an array, insert each book separately
+    const insertionResults = await Promise.all(bookcollectionsData.map(book => db.collection("collections").insertOne(book)));
+    res.json({
+        'result': insertionResults
+    });
+} else {
+    // If it's a single object, insert it directly
+    const result = await db.collection("collections").insertOne(bookcollectionData);
             res.json({
                 'result': result
-            })
+            });
+        }
         } catch (e) {
             // e will contain the error message
             res.status(500); 
             res.json({
-                'error': "Hello we are here"
-            })
-        }
+                'error': "Hello hello"
+            });
+         }
+    });
 
-    })
+
+    
+    
+
 
     app.put('/book-collections/webpage', async function(req,res) {
 
