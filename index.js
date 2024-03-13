@@ -74,7 +74,7 @@ async function main() {
         }
 
     });
-}
+
 [
     { 
      "_id":"1002",
@@ -98,52 +98,41 @@ async function main() {
      app.post("/book-collections", async function (req, res) {
 
         try {
-              const bookdata = req.body;
             
-            // insert a new document based on what the client has sent
-            const result = await db.collection("collections").insertOne(bookdata);
+            const booktitle= req.body.booktitle;
+            const description= req.body.description;
+            const publishdatetime= req.body.publishdatetime ? new Date(req.body.publishdatetime): new Date();
             
-            
-            // data is a document - JSON is {blah blah}
-        [ 
-            {
-                "_id": "1002",
-                "book title": "The psychology of money",
-                "description": "Timeless lessons on wealth, greed, and happiness.",
-                "publish_date": "2020-09-08",
-                "email": "morgan@gmail.com",
-                "language": "English",
-                "paperback": "272 pages",
-                "ISBN": "978-0857197689",
-                "ratings": "1 in professional finance",
-                "contact": "+65989098"
-            }
-        ]
- // Check if the bookData is an array (multiple books) or a single object (single book)
- if (Array.isArray(bookcollectionsData)) {
-    // If it's an array, insert each book separately
-    const insertionResults = await Promise.all(bookcollectionsData.map(book => db.collection("collections").insertOne(book)));
-    res.json({
-        'result': insertionResults
-    });
-} else {
-    // If it's a single object, insert it directly
-    const result = await db.collection("collections").insertOne(bookcollectionData);
+          if(!booktitle) {
+            res.status(400);
             res.json({
-                'result': result
+                'error':'A booktitle must be provided'
             });
+            return;
         }
-        } catch (e) {
-            // e will contain the error message
-            res.status(500); 
+        if(!description || !Array.isArray(description)){
+            res.status(400);
             res.json({
-                'error': "Hello hello"
-            });
-         }
-    });
-
-
-    
+                'error':'description must be provided and must be a array'
+            })
+        }
+           // insert a new document based on what the client has sent
+           const result = await db.collection("collections").insertone({
+            'booktitle': booktitle,
+            'description': description,
+            'publishdatetime': publishdatetime,
+           });
+           res.json({
+            'result':result
+           })
+        } catch (e) {
+            // e will contain error message
+            res.status(500);
+            res.json({
+                'error':e
+            })
+        }
+     })
     
 
 
@@ -198,7 +187,7 @@ async function main() {
         })
     })
 
-
+}
 main();
 
 app.listen(3000, function () {
