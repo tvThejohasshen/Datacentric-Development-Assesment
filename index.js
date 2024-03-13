@@ -144,51 +144,48 @@ async function main() {
         }
      })
     
-
-
-    app.put('/book-collections/webpage', async function(req,res) {
-
-        const data = {
-            "description":"The main message is that is that it's best to acknowledge of children's feelings.",
-            "book title":"The book you wish your parents had read",
-            "publish_date":"2020-12-31",
-            "email":"philippa@gmail.com",
-            "language":"English",
-            "paperback":"272 pages",
-            "ISBN":"978-0241251027",
-            "contact":"+6587889"
-        }
-
+     app.put('/book-collections/:id', async function(req,res){
         try {
-            id = req.params.webpage;
-           
-            if (!data.description || !data["book title"] || !Array.isArray(data["book title"])) {
-                res.status(400).json({ 'error': 'Invalid data provided' });
+            const booktitle= req.body.booktitle;
+            const description= req.body.description;
+            const publishdatetime= req.body.publishdatetime ? new Date(req.body.publishdatetime): new Date();
+            
+    
+            if (!booktitle ||!description || Array.isArray(description)) {
+                res.status(400); // bad request -- the client didn't follow the specifications for our endpoint
+                res.json({
+                    'error': 'Invalid data provided'
+                });
                 return;
             }
 
-            // The collection name needs to be inside
-            const result = await db.collection("collectionNameToReplaceWithTheRealOne").updateOne(
-                { '_id': id }, // Filter criteria to match documents by ID
-                { '$set': data }
-            );
-        
+            console.log("code works until here")
+            const result = await db.collection("collections").updateOne({
+                '_id': new ObjectId(req.params.id)
+            },{
+                '$set': {
+                    'booktitle': booktitle,
+                    'description': description,
+                    'publishdatetime': publishdatetime,
+                }
+            })
+    
+            console.log("meow")
             res.json({
                 'result': result
             })
-
         } catch (e) {
             res.status(500);
             res.json({
                 'error':'Internal Server Error'
-            });
+            })
         }
+       
     })
-    
-    
+
     
     app.delete('/book-collections/:id', async function(req,res){
-        await db.collection('collections').deleteMany({
+        await db.collection('collections').deleteOne({
             '_id': new ObjectId(req.params.id)
         });
 
