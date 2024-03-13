@@ -103,25 +103,35 @@ async function main() {
             const description= req.body.description;
             const publishdatetime= req.body.publishdatetime ? new Date(req.body.publishdatetime): new Date();
             
-          if(!booktitle) {
-            res.status(400);
-            res.json({
-                'error':'A booktitle must be provided'
-            });
-            return;
-        }
-        if(!description || !Array.isArray(description)){
-            res.status(400);
-            res.json({
-                'error':'description must be provided and must be a array'
-            })
-        }
+            if(!booktitle) {
+                res.status(400);
+                res.json({
+                    'error':'A booktitle must be provided'
+                });
+                return;
+            }
+
+            // your description is not an array. it is a string.
+            // so it is wrong to put !Array.isArray(description) because it checks for array
+            if(!description){
+                res.status(400);
+                res.json({
+                    'error':'description must be provided and must be a string'
+                })
+            }
            // insert a new document based on what the client has sent
-           const result = await db.collection("collections").insertone({
+           
+           console.log("here")
+           console.log("book title", booktitle);
+           console.log("description", description);
+           console.log("publishdatetime here", publishdatetime)
+
+           const result = await db.collection("collections").insertOne({
             'booktitle': booktitle,
             'description': description,
             'publishdatetime': publishdatetime,
            });
+           console.log("here 2")
            res.json({
             'result':result
            })
