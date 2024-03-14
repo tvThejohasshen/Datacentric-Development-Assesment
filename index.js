@@ -88,7 +88,7 @@ async function main() {
         }
     });
 
-    app.post("/book-collections", async function (req, res) {
+    app.post("/book-collections", authenticateWithJWT, async function (req, res) {
         try {
             const { booktitle, description, publishdatetime } = req.body;
 
@@ -109,7 +109,8 @@ async function main() {
             const result = await db.collection("collections").insertOne({
                 'booktitle': booktitle,
                 'description': description,
-                'publishdatetime': publishdatetime ? new Date(publishdatetime) : new Date()
+                'publishdatetime': publishdatetime ? new Date(publishdatetime) : new Date(),
+                'user': req.payload.user_id 
             });
 
             res.json({
